@@ -1,4 +1,4 @@
-# Regular Investing - A Life Transforming Strategy
+# Regular Investment - A Life Transforming Strategy
 
 *—— Have time be on your side and continuously enrich you...*
 
@@ -33,7 +33,7 @@ There is a set of data that helps us understand why efforts are so insignificant
 > - It’s really not long spent on real education, which is only 3.5 years;
 > - It takes 3 years to spend on makeup.
 > - 2.5 years spending on shopping;
-> - 1.5 years spending  of child care;
+> - 1.5 years spending on child care;
 > - The time spent on the road is 1.3 years;
 > ......
 
@@ -45,7 +45,7 @@ What is real hardworking? That is, everyone has only 9 years of free time, but y
 
 This is why the hard work, sweat or effort actually do not allow you to get rid of the root cause of class solidification -no matter in which country and in which era.
 
-They why invenstment can break the ceiling? **The essence of investment is to use your own money to make more money, which does not need rest and works for you 24/365, as long as you find the right investment**...... So, how do you compare your sweat with it? The reason we admire Warren Buffett is that:
+Then why invenstment can break the ceiling? **The essence of investment is to use your own money to make more money, which does not need rest and works for you 24/365, as long as you find the right investment**...... So, how do you compare your sweat with it? The reason we admire Warren Buffett is that:
 
 
 > Warren Buffett was born in 1930. At the age of 11, he bought the first stock in his life. It has been 78 years till 2019!
@@ -73,7 +73,7 @@ More than 10,000 hours. So how many years is this equivalent?
 
 You see, I am so demanding about myself, then what is the result? The result is only 14% more than "other people who are really hard". I decided to cut my hair 10 years ago and how much time saved myself? Once a month, each time an average of 1.5 hours, then 18 hours a year, 10 years down, is 180 hours ... You see, I use the actual action carefully, but is it really really enough? How much effective life can that increase? Or how long has it been compared to others? It was only 7.5 days, and with such a great effort, it was only 2.28 more than everyone else!
 
-You now understand that it **is impossible to get rid of the class solidification without investing.**
+You now understand that it **is impossible to get rid of the class solidification without investment.**
 
 However, you must have been warned:
 
