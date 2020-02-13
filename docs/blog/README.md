@@ -1,5 +1,174 @@
 # 博客
 
+## 2020.01.26 BOX 历史价格自动更新
+
+我在 github 仓库里，添加了一个 ```data``` 目录，里面的 BOX 历史价格文件会每日 23:59 更新一次价格。
+
+而后，可以使用这个文件去用 Python 制作价格变动图表，代码如下：
+
+
+
+```python
+import matplotlib.pyplot as plt
+import pandas as pd
+from re import sub
+
+series = pd.read_csv(
+    "https://raw.githubusercontent.com/xiaolai/regular-investing-in-box/master/data/box_price_history.txt",
+    sep="\t"
+)
+
+number_of_rows = series.shape[0]
+
+daily_invested = 1
+
+# add column "Total Invested"
+total_invested = []
+for i in range(0, number_of_rows):
+    total_invested.append((i+1)*daily_invested)
+series["Total Invested"] = total_invested
+
+# add column "Daily Bought"
+BOX_daily_bought = []
+for i in range(0, number_of_rows):
+    BOX_daily_bought.append(daily_invested/float(sub(r"[^\d.]", "", series.at[i, "BOX Price"])))
+
+series["BOX Bought"] = BOX_daily_bought
+
+# add column "Value Accumulated"
+value_accumulated = []
+for i in range(0, number_of_rows):
+    holding = 0
+    for j in range(0, i+1):
+        holding += series.at[j, "BOX Bought"]
+    value_accumulated.append(holding * float(sub(r"[^\d.]", "", series.at[i, "BOX Price"])))
+series["Value Accumulated"] = value_accumulated    
+
+
+# add BTC price change
+btc_price_change = []
+eos_price_change = []
+xin_price_change = []
+box_price_change = []
+ri_box_change = []
+for i in range(0, number_of_rows):
+    btc_price_change.append(float(sub(r"[^\d.]", "", series.at[i, "BTC Price"]))/float(sub(r"[^\d.]", "", series.at[0, "BTC Price"])) - 1)
+    eos_price_change.append(float(sub(r"[^\d.]", "", series.at[i, "EOS Price"]))/float(sub(r"[^\d.]", "", series.at[0, "EOS Price"])) - 1)
+    xin_price_change.append(float(sub(r"[^\d.]", "", series.at[i, "XIN Price"]))/float(sub(r"[^\d.]", "", series.at[0, "XIN Price"])) - 1)
+    box_price_change.append(float(sub(r"[^\d.]", "", series.at[i, "BOX Price"]))/float(sub(r"[^\d.]", "", series.at[0, "BOX Price"])) - 1)    
+    ri_box_change.append(series.at[i, "Value Accumulated"]/series.at[i, "Total Invested"] - 1)
+series["BTC"] = btc_price_change
+series["EOS"] = eos_price_change
+series["XIN"] = xin_price_change
+series["BOX"] = box_price_change
+series["RI-BOX"] = ri_box_change
+
+# print(series)
+
+ax = plt.gca()
+series.plot(kind='line', x='Date', y='BTC', ax=ax)
+series.plot(kind='line', x='Date', y='EOS', ax=ax)
+series.plot(kind='line', x='Date', y='XIN', ax=ax)
+series.plot(kind='line', x='Date', y='BOX', ax=ax)
+series.plot(kind='line', x='Date', y='RI-BOX', ax=ax)
+plt.show()
+```
+
+![png](images/output_0_0.png)
+
+## 2020.01.24 多年前的一篇短文
+
+我曾经用过 xiaolai.li 这个域名，后来不用了。现在，这篇文章只能在 [archive.org](https://web.archive.org/web/20140523062542/xiaolai.li/bitcoin-period) 上看到了。
+
+**Bitcoin Period**
+
+**What is bitcoin?**
+> Money.
+
+**Is it a scam?**
+> No.
+
+**Can I have some coins?**
+> Yes.
+
+**What is the best way to get some coins?**
+> Buy.
+
+**Is there any way to have coins other than buying?**
+> Mine.
+
+**Is it safe?**
+> Depends.
+
+**What can I buy with bitcoin?**
+> Anything.
+
+**I once heard of it, but couldn’t get it, what should I do?**
+> Learn.
+
+**Is it too expensive now?**
+> No.
+
+**Is it too late now?**
+> Never.
+
+**Should I buy bitcoin as an investment?**
+> Don’t.
+
+**What is the best move after getting some coins?**
+> Hold.
+
+**The price is too high, should I sell them all?**
+> No.
+
+**The price is dropping too fast, what should I do?**
+> Nothing.
+
+**How much will the price of bitcoin go up to?**
+> Higher.
+
+**People are asking questions, I cannot explain, what should I do?**
+> Try.
+
+**… but how?**
+> Harder.
+
+**Are you crazy?**
+> Maybe.
+
+## 2020.01.22 区块链市场前景
+
+比特币作为世界上第一个应用，并没有像最初很多人以为的那样，“颠覆主权货币” —— 顶多，是地球上多了一个社区货币而已。
+
+然而，区块链交易市场却实实在在地在颠覆传统证券交易市场。
+
+![](images/marketcap-chart.png)
+
+当前区块链交易市场内总市值只有 2500 亿美元左右，港交所的总市值大约为 5 万亿美元，而纳斯达克的总市值大约为 14 万亿美元。
+
+哪怕是区块链交易市场总市值隔天马上翻上 20 倍，也才追上港交所；要隔天翻上 56 倍才可能赶上纳斯达克…… 可传统正确交易市场也不是静止不动的，也在发展…… 等有一天，区块链交易市场市值规模真的追上的时候呢？
+
+也就是说，如此粗略估算，区块链交易市场市值规模也至少有 50 ～ 100 的空间……
+
+看起来很像是胡说八道呢！
+
+## 2020.01.12 GAFATA 近三年表现
+
+2017 年 1 月 1 日，在《通往财富自由》专栏之中，我向读者们介绍了 GAFATA 这个投资组合。
+
+时间真快，转眼三年过去 —— 三年时间说长不长，说短不短，但，在交易市场里，时间就是能够积聚力量的……
+
+![](images/gafata.png)
+
+> [点击这里查看实时图表](https://finance.yahoo.com/chart/GOOG#eyJpbnRlcnZhbCI6IndlZWsiLCJwZXJpb2RpY2l0eSI6MSwiY2FuZGxlV2lkdGgiOjE0LjI0MDUwNjMyOTExMzkyNCwidm9sdW1lVW5kZXJsYXkiOnRydWUsImFkaiI6dHJ1ZSwiY3Jvc3NoYWlyIjp0cnVlLCJjaGFydFR5cGUiOiJsaW5lIiwiZXh0ZW5kZWQiOmZhbHNlLCJtYXJrZXRTZXNzaW9ucyI6e30sImFnZ3JlZ2F0aW9uVHlwZSI6Im9obGMiLCJjaGFydFNjYWxlIjoibGluZWFyIiwicGFuZWxzIjp7ImNoYXJ0Ijp7InBlcmNlbnQiOjEsImRpc3BsYXkiOiJHT09HIiwiY2hhcnROYW1lIjoiY2hhcnQiLCJ0b3AiOjB9fSwibGluZVdpZHRoIjoyLCJzdHJpcGVkQmFja2dyb3VkIjp0cnVlLCJldmVudHMiOnRydWUsImNvbG9yIjoiIzAwODFmMiIsImV2ZW50TWFwIjp7ImNvcnBvcmF0ZSI6eyJkaXZzIjp0cnVlLCJzcGxpdHMiOnRydWV9LCJzaWdEZXYiOnt9fSwiY3VzdG9tUmFuZ2UiOnsic3RhcnQiOjE0ODMzNzI4MDAwMDAsImVuZCI6MTU3NzYzNTIwMDAwMH0sInN5bWJvbHMiOlt7InN5bWJvbCI6IkdPT0ciLCJzeW1ib2xPYmplY3QiOnsic3ltYm9sIjoiR09PRyJ9LCJwZXJpb2RpY2l0eSI6MSwiaW50ZXJ2YWwiOiJ3ZWVrIn0seyJzeW1ib2wiOiJBQVBMIiwic3ltYm9sT2JqZWN0Ijp7InN5bWJvbCI6IkFBUEwifSwicGVyaW9kaWNpdHkiOjEsImludGVydmFsIjoid2VlayIsImlkIjoiQUFQTCIsInBhcmFtZXRlcnMiOnsiY29sb3IiOiIjNzJkM2ZmIiwid2lkdGgiOjIsImlzQ29tcGFyaXNvbiI6dHJ1ZSwiY2hhcnROYW1lIjoiY2hhcnQiLCJzeW1ib2xPYmplY3QiOnsic3ltYm9sIjoiQUFQTCJ9LCJwYW5lbCI6ImNoYXJ0IiwiYWN0aW9uIjoiYWRkLXNlcmllcyIsInNoYXJlWUF4aXMiOnRydWUsInN5bWJvbCI6IkFBUEwiLCJnYXBEaXNwbGF5U3R5bGUiOiJ0cmFuc3BhcmVudCIsIm5hbWUiOiJLNUFCS0ZEU0dXIiwib3ZlckNoYXJ0Ijp0cnVlLCJ1c2VDaGFydExlZ2VuZCI6dHJ1ZSwiaGVpZ2h0UGVyY2VudGFnZSI6MC43LCJvcGFjaXR5IjoxLCJoaWdobGlnaHRhYmxlIjp0cnVlLCJ0eXBlIjoibGluZSIsInN0eWxlIjoic3R4X2xpbmVfY2hhcnQifX0seyJzeW1ib2wiOiJGQiIsInN5bWJvbE9iamVjdCI6eyJzeW1ib2wiOiJGQiJ9LCJwZXJpb2RpY2l0eSI6MSwiaW50ZXJ2YWwiOiJ3ZWVrIiwiaWQiOiJGQiIsInBhcmFtZXRlcnMiOnsiY29sb3IiOiIjYWQ2ZWZmIiwid2lkdGgiOjIsImlzQ29tcGFyaXNvbiI6dHJ1ZSwiY2hhcnROYW1lIjoiY2hhcnQiLCJzeW1ib2xPYmplY3QiOnsic3ltYm9sIjoiRkIifSwicGFuZWwiOiJjaGFydCIsImFjdGlvbiI6ImFkZC1zZXJpZXMiLCJzaGFyZVlBeGlzIjp0cnVlLCJzeW1ib2wiOiJGQiIsImdhcERpc3BsYXlTdHlsZSI6InRyYW5zcGFyZW50IiwibmFtZSI6Iks1QUJLTjRRSk8iLCJvdmVyQ2hhcnQiOnRydWUsInVzZUNoYXJ0TGVnZW5kIjp0cnVlLCJoZWlnaHRQZXJjZW50YWdlIjowLjcsIm9wYWNpdHkiOjEsImhpZ2hsaWdodGFibGUiOnRydWUsInR5cGUiOiJsaW5lIiwic3R5bGUiOiJzdHhfbGluZV9jaGFydCJ9fSx7InN5bWJvbCI6IkFNWk4iLCJzeW1ib2xPYmplY3QiOnsic3ltYm9sIjoiQU1aTiJ9LCJwZXJpb2RpY2l0eSI6MSwiaW50ZXJ2YWwiOiJ3ZWVrIiwiaWQiOiJBTVpOIiwicGFyYW1ldGVycyI6eyJjb2xvciI6IiNmZjgwYzUiLCJ3aWR0aCI6MiwiaXNDb21wYXJpc29uIjp0cnVlLCJjaGFydE5hbWUiOiJjaGFydCIsInN5bWJvbE9iamVjdCI6eyJzeW1ib2wiOiJBTVpOIn0sInBhbmVsIjoiY2hhcnQiLCJhY3Rpb24iOiJhZGQtc2VyaWVzIiwic2hhcmVZQXhpcyI6dHJ1ZSwic3ltYm9sIjoiQU1aTiIsImdhcERpc3BsYXlTdHlsZSI6InRyYW5zcGFyZW50IiwibmFtZSI6Iks1QUJLVjFPNDAiLCJvdmVyQ2hhcnQiOnRydWUsInVzZUNoYXJ0TGVnZW5kIjp0cnVlLCJoZWlnaHRQZXJjZW50YWdlIjowLjcsIm9wYWNpdHkiOjEsImhpZ2hsaWdodGFibGUiOnRydWUsInR5cGUiOiJsaW5lIiwic3R5bGUiOiJzdHhfbGluZV9jaGFydCJ9fSx7InN5bWJvbCI6IjA3MDAuSEsiLCJzeW1ib2xPYmplY3QiOnsic3ltYm9sIjoiMDcwMC5ISyJ9LCJwZXJpb2RpY2l0eSI6MSwiaW50ZXJ2YWwiOiJ3ZWVrIiwiaWQiOiIwNzAwLkhLIiwicGFyYW1ldGVycyI6eyJjb2xvciI6IiNmZmJkNzQiLCJ3aWR0aCI6MiwiaXNDb21wYXJpc29uIjp0cnVlLCJjaGFydE5hbWUiOiJjaGFydCIsInN5bWJvbE9iamVjdCI6eyJzeW1ib2wiOiIwNzAwLkhLIn0sInBhbmVsIjoiY2hhcnQiLCJhY3Rpb24iOiJhZGQtc2VyaWVzIiwic2hhcmVZQXhpcyI6dHJ1ZSwic3ltYm9sIjoiMDcwMC5ISyIsImdhcERpc3BsYXlTdHlsZSI6InRyYW5zcGFyZW50IiwibmFtZSI6Iks1QUJMNDBGMkMiLCJvdmVyQ2hhcnQiOnRydWUsInVzZUNoYXJ0TGVnZW5kIjp0cnVlLCJoZWlnaHRQZXJjZW50YWdlIjowLjcsIm9wYWNpdHkiOjEsImhpZ2hsaWdodGFibGUiOnRydWUsInR5cGUiOiJsaW5lIiwic3R5bGUiOiJzdHhfbGluZV9jaGFydCJ9fSx7InN5bWJvbCI6IkJBQkEiLCJzeW1ib2xPYmplY3QiOnsic3ltYm9sIjoiQkFCQSJ9LCJwZXJpb2RpY2l0eSI6MSwiaW50ZXJ2YWwiOiJ3ZWVrIiwiaWQiOiJCQUJBIiwicGFyYW1ldGVycyI6eyJjb2xvciI6IiNmZmU3ODYiLCJ3aWR0aCI6MiwiaXNDb21wYXJpc29uIjp0cnVlLCJjaGFydE5hbWUiOiJjaGFydCIsInN5bWJvbE9iamVjdCI6eyJzeW1ib2wiOiJCQUJBIn0sInBhbmVsIjoiY2hhcnQiLCJhY3Rpb24iOiJhZGQtc2VyaWVzIiwic2hhcmVZQXhpcyI6dHJ1ZSwic3ltYm9sIjoiQkFCQSIsImdhcERpc3BsYXlTdHlsZSI6InRyYW5zcGFyZW50IiwibmFtZSI6Iks1QUJMQktKNEQiLCJvdmVyQ2hhcnQiOnRydWUsInVzZUNoYXJ0TGVnZW5kIjp0cnVlLCJoZWlnaHRQZXJjZW50YWdlIjowLjcsIm9wYWNpdHkiOjEsImhpZ2hsaWdodGFibGUiOnRydWUsInR5cGUiOiJsaW5lIiwic3R5bGUiOiJzdHhfbGluZV9jaGFydCJ9fV0sInN0dWRpZXMiOnsidm9sIHVuZHIiOnsidHlwZSI6InZvbCB1bmRyIiwiaW5wdXRzIjp7ImlkIjoidm9sIHVuZHIiLCJkaXNwbGF5Ijoidm9sIHVuZHIifSwib3V0cHV0cyI6eyJVcCBWb2x1bWUiOiIjMDBiMDYxIiwiRG93biBWb2x1bWUiOiIjRkYzMzNBIn0sInBhbmVsIjoiY2hhcnQiLCJwYXJhbWV0ZXJzIjp7IndpZHRoRmFjdG9yIjowLjQ1LCJjaGFydE5hbWUiOiJjaGFydCJ9fX0sInJhbmdlIjp7ImR0TGVmdCI6IjIwMTYtMTItMzFUMTY6MDA6MDAuMDAwWiIsImR0UmlnaHQiOiIyMDIwLTAxLTEyVDAxOjA3OjUyLjQ2M1oiLCJwZXJpb2RpY2l0eSI6eyJpbnRlcnZhbCI6IndlZWsiLCJwZXJpb2QiOjF9LCJwYWRkaW5nIjowfX0=)
+
+当年写《通往财富自由》专栏的时候，很多傻逼说，这个专栏是割韭菜的，是收智商税的什么的…… 傻逼就是傻逼，没救。
+
+现在三年过去了，专栏读者中照做的人有了一倍以上的收益 —— 三年一倍以上，那就是至少 26% 的复合年化回报率 —— 这可是优于沃伦·巴菲特的成绩。
+
+傻逼们呢？傻逼们的普遍特征就是，一天过去，他还那个样子，一个月过去，他还是那个样子，一年过去，他还是那个样子，三年过去呢？他还是那个样子…… 只不过，有个他不知道的东西，叫做通货膨胀，把他变得更傻了，他却不知道而已……
+
+**行动才能发生改变**，这是不变的真理。
 
 
 ## 2020.01.04 九十年前的一篇文章
